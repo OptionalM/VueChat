@@ -1,6 +1,6 @@
-# Empty Express-Vue-Node.js Stack
+# Empty MongoDB-Express-Vue-Node.js Stack
 
-This is an empty template for a EVN stack.
+This is an empty template for a MEVN (or VENoM) stack.
 Use it as a starting point for your projects.
 
 ## Project setup

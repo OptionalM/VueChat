@@ -3,7 +3,15 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const http = require('http');
+const mongoose = require('mongoose');
 
+// Use native Node promises
+mongoose.Promise = global.Promise;
+
+// connect to DB
+mongoose.connect('mongodb://localhost/myApp', { useNewUrlParser: true })
+  .then(() => console.log('connected to DB'))
+  .catch((err) => console.log(err));
 
 const app = express();
 const port = 4200;
