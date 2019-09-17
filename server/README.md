@@ -5,15 +5,14 @@ It runs a [Node.js](https://nodejs.org/en/) app with [Express](https://expressjs
 It connects to a [MongoDB](https://www.mongodb.com/) using [Mongoose](https://mongoosejs.com/).
 It serves the stuff inside `../client/dist`.
 
-## Project setup
+### Project setup
 ```bash
+# Install dependencies
 yarn install
-```
-installs all the needed dependencies.
 
+# Start a MongoDB server
+mondod
 
-Start a MongoDB server.
-Then you can run the server with hot-reload by using
-```bash
+# Run the server with hot-reload
 yarn run dev
 ```
