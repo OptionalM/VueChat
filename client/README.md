@@ -1,8 +1,8 @@
-# Client
+# Frontend
 
-This is the client component.
-It's an empty [Vue](https://vuejs.org/) app.
-[Vuex](https://vuex.vuejs.org) and [Vue Router](https://router.vuejs.org/) are already set up to be used.
+This is the frontend of the chat.
+It's built with [Vue](https://vuejs.org/), [Vuex](https://vuex.vuejs.org) and [Vue Router](https://router.vuejs.org/).
+It also uses [Vue-Socket.io](https://github.com/MetinSeylan/Vue-Socket.io).
 
 ### Project setup
 ```bash

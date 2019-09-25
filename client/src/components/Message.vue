@@ -2,14 +2,16 @@
   <div class="msg-row">
     <div
       class="msg"
-      :class="{ you: msg.name.includes('ab') }"
+      :class="{ you: msg.name === username }"
     >
-      <p>{{ msg.body }}</p>
+      <p>{{ msg.text }}</p>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'Message',
   props: {
@@ -18,6 +20,9 @@ export default {
       default: () => ({}),
     },
   },
+  computed: mapState({
+    username: 'username',
+  }),
 };
 </script>
 

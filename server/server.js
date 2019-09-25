@@ -1,9 +1,20 @@
 // dependencies
-const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const http = require('http');
 const mongoose = require('mongoose');
+const express = require('express');
+// create an express app
+const app = express();
+// create a server
+const http = require('http').createServer(app);
+// put socket.io on the server
+const io = require('socket.io')(http);
+
+const port = 4200;
+
+/**
+ * Mongoose stuff
+ */
 
 // Use native Node promises
 mongoose.Promise = global.Promise;
@@ -13,8 +24,9 @@ mongoose.connect('mongodb://localhost/myApp', { useNewUrlParser: true })
   .then(() => console.log('connected to DB'))
   .catch((err) => console.log(err));
 
-const app = express();
-const port = 4200;
+/**
+ * Express stuff
+ */
 
 // Allow cross origin requests
 app.use((req, res, next) => {
@@ -31,15 +43,40 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Point static path to ../cient/dist
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
+// serve previous messages
+app.get('/msgs.json', (req, res) => {
+  res.send([{ id: 0, name: '', text: 'Minim culpa veniam nulla.' }]);
+});
+
+
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 /**
- * Create HTTP server.
+ * IO stuff
  */
-const server = http.createServer(app);
+let id = 0;
+io.on('connection', (socket) => {
+  // a user connected
+  socket.on('name', (n) => {
+    socket.username = n;
+  });
+  socket.on('msg', (text) => {
+    if (socket.username === undefined) {
+      socket.emit('redirect', 'No username');
+    } else {
+      id += 1;
+      io.emit('msg', {
+        id,
+        text,
+        name: socket.username,
+      });
+    }
+  });
+});
+
 
 // start the server
-server.listen(port, () => console.log(`Server listening on port ${port}!`));
+http.listen(port, () => console.log(`Server listening on port ${port}!`));

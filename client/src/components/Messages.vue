@@ -29,7 +29,7 @@ export default {
     msgs: 'msgs',
   }),
   created() {
-    axios.get('https://jsonplaceholder.typicode.com/comments?_limit=5')
+    axios.get('http://localhost:4200/msgs.json')
       .then((res) => { store.commit('setMsgs', res.data); })
       .catch((err) => console.log(err));
   },

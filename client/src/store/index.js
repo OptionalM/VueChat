@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     msgs: [],
+    username: 'thelegend27',
   },
   mutations: {
     addMsg(state, msg) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     setMsgs(state, msgs) {
       state.msgs = msgs;
+    },
+    setUsername(state, username) {
+      state.username = username;
     },
   },
 });

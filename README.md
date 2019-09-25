@@ -1,7 +1,6 @@
-# Empty MongoDB-Express-Vue-Node.js Stack
+# Chat on VENoM Stack
 
-This is an empty template for a MEVN (or VENoM) stack.
-Use it as a starting point for your projects.
+This is a classic chat app to test out the VENoM Stack.
 
 ## Project setup
 Checkout the `README.md` inside `client/` and `server/`.

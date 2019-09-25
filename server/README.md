@@ -5,6 +5,8 @@ It runs a [Node.js](https://nodejs.org/en/) app with [Express](https://expressjs
 It connects to a [MongoDB](https://www.mongodb.com/) using [Mongoose](https://mongoosejs.com/).
 It serves the stuff inside `../client/dist`.
 
+Using [Socket.io](https://socket.io/) it serves the chat functionality.
+
 ### Project setup
 ```bash
 # Install dependencies

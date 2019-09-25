@@ -31,14 +31,27 @@ export default {
       default: 'Chatroom #1',
     },
   },
+  sockets: {
+    connect: () => {
+      console.log('socket connected');
+    },
+    msg: (data) => {
+      store.commit('addMsg', data);
+    },
+  },
   methods: {
-    sendMsg: () => {
+    sendMsg() {
+      // TODO: should only do this once
+      this.setUsername('thelegend27');
       const body = document.getElementsByName('Textbox')[0].value;
       if (body.length > 1) {
-        // TODO: send to server
-        store.commit('addMsg', { id: 10, name: 'ab', body });
+        this.$socket.emit('msg', body);
       }
       document.getElementsByName('Textbox')[0].value = '';
+    },
+    setUsername(name) {
+      store.commit('setUsername', name);
+      this.$socket.emit('name', name);
     },
   },
 };
