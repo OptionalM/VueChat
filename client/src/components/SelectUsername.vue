@@ -7,6 +7,7 @@
         type="text"
         name="Textbox"
         placeholder="Type Username Here..."
+        autofocus
         @keyup.enter="setUsername"
       >
       <button @click="setUsername">

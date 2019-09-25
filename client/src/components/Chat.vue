@@ -7,6 +7,7 @@
         id="Textbox"
         type="text"
         name="Textbox"
+        autofocus
         @keyup.enter="sendMsg"
       >
       <button @click="sendMsg">

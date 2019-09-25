@@ -45,7 +45,7 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // serve previous messages
 app.get('/msgs.json', (req, res) => {
-  res.send([{ id: 0, name: '', text: 'Minim culpa veniam nulla.' }]);
+  res.send([{ id: 0, name: 'TheLegend27', text: 'Minim culpa veniam nulla.' }]);
 });
 
 
