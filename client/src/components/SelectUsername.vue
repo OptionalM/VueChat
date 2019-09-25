@@ -1,30 +1,26 @@
 <template>
-  <div class="chat">
+  <div class="select-username">
     <h1>{{ roomName }}</h1>
-    <Messages />
     <div class="input-box">
       <input
         id="Textbox"
         type="text"
         name="Textbox"
-        @keyup.enter="sendMsg"
+        placeholder="Type Username Here..."
+        @keyup.enter="setUsername"
       >
-      <button @click="sendMsg">
-        Send
+      <button @click="setUsername">
+        Commit
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import Messages from './Messages.vue';
 import store from '../store/index';
 
 export default {
   name: 'Chat',
-  components: {
-    Messages,
-  },
   props: {
     roomName: {
       type: String,
@@ -35,18 +31,18 @@ export default {
     msg: (data) => {
       store.commit('addMsg', data);
     },
-    redirect: (data) => {
-      if (data === 'No username set.') {
-        store.commit('setUsername', undefined);
-        this.$router.push('/login');
+    redirect(data) {
+      if (data.status === 200) {
+        store.commit('setUsername', data.payload);
+        this.$router.push('/');
       }
     },
   },
   methods: {
-    sendMsg() {
-      const body = document.getElementsByName('Textbox')[0].value;
-      if (body.length > 1) {
-        this.$socket.emit('msg', body);
+    setUsername() {
+      const name = document.getElementsByName('Textbox')[0].value;
+      if (name.length > 1) {
+        this.$socket.emit('name', name);
       }
       document.getElementsByName('Textbox')[0].value = '';
     },
@@ -59,27 +55,30 @@ export default {
 h1 {
   padding: 5px;
 }
-.chat {
+.select-username {
   flex: 1 1 auto;
   display: flex;
   flex-flow: column;
   height: calc(100% - 700px);
   max-width: 800px;
   margin: auto;
+  align-items: center;
+  justify-content: center;
 }
 .input-box{
   flex: 0 1 40px;
   margin: 0px 50px 30px 50px;
-  padding: 5px;
+  padding: 20px;
   background-color: #ccc;
-  border-radius: 0px 0px 10px 10px;
+  border-radius: 20px;
   width: calc(100vw - 100px);
   max-width: 700px;
 }
 input[type=text] {
-  width: 80%;
+  font-size: 22pt;
+  width: 60%;
   max-width: 640px;
-  padding: 5px;
+  padding: 15px;
   background-color: #3b3b3b;
   color: #cacaca;
   border: none;
@@ -90,8 +89,9 @@ input[type=text]:focus {
   border: none;
 }
 button {
-  padding: 5px;
-  width: 20%;
+  font-size: 22pt;
+  padding: 15px;
+  width: 40%;
   max-width: 160px;
   background-color: #3b3b3b;
   color: #cacaca;

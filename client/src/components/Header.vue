@@ -7,7 +7,7 @@
       </router-link>
       <span>|</span>
       <router-link to="/login">
-        Login
+        Select a Username
       </router-link>
       <span>|</span>
       <router-link to="/about">

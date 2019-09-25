@@ -7,7 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     msgs: [],
-    username: 'thelegend27',
+    username: undefined,
   },
   mutations: {
     addMsg(state, msg) {

@@ -62,10 +62,11 @@ io.on('connection', (socket) => {
   // a user connected
   socket.on('name', (n) => {
     socket.username = n;
+    socket.emit('redirect', { status: 200, payload: n });
   });
   socket.on('msg', (text) => {
     if (socket.username === undefined) {
-      socket.emit('redirect', 'No username');
+      socket.emit('redirect', 'No username set.');
     } else {
       id += 1;
       io.emit('msg', {
