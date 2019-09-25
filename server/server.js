@@ -9,18 +9,16 @@ const app = express();
 const http = require('http').createServer(app);
 // put socket.io on the server
 const io = require('socket.io')(http);
+// Mongoose models
+const { Message } = require('./models/Message');
 
 const port = 4200;
-
-/**
- * Mongoose stuff
- */
 
 // Use native Node promises
 mongoose.Promise = global.Promise;
 
 // connect to DB
-mongoose.connect('mongodb://localhost/myApp', { useNewUrlParser: true })
+mongoose.connect('mongodb://localhost/crappyChat', { useNewUrlParser: true })
   .then(() => console.log('connected to DB'))
   .catch((err) => console.log(err));
 
@@ -45,7 +43,8 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // serve previous messages
 app.get('/msgs.json', (req, res) => {
-  res.send([{ id: 0, name: 'TheLegend27', text: 'Minim culpa veniam nulla.' }]);
+  Message.find()
+    .then((msgs) => { res.send(msgs); });
 });
 
 
@@ -57,7 +56,6 @@ app.get('*', (req, res) => {
 /**
  * IO stuff
  */
-let id = 0;
 io.on('connection', (socket) => {
   // a user connected
   socket.on('name', (n) => {
@@ -68,11 +66,9 @@ io.on('connection', (socket) => {
     if (socket.username === undefined) {
       socket.emit('redirect', 'No username set.');
     } else {
-      id += 1;
-      io.emit('msg', {
-        id,
-        text,
-        name: socket.username,
+      const newMsg = new Message({ text, name: socket.username });
+      newMsg.save().then((m) => {
+        io.emit('msg', m);
       });
     }
   });
