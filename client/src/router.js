@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store/index';
 import Chat from './components/Chat.vue';
-import SelectUsername from './components/SelectUsername.vue';
+import Login from './components/Login.vue';
 
 Vue.use(Router);
 
@@ -12,7 +12,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'chat',
+      name: 'Chat',
       component: Chat,
       beforeEnter: (to, from, next) => {
         if (store.state.username === undefined) {
@@ -23,8 +23,8 @@ const router = new Router({
     },
     {
       path: '/login',
-      name: 'username',
-      component: SelectUsername,
+      name: 'Login',
+      component: Login,
     },
   ],
 });

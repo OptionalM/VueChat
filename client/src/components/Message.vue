@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
   name: 'Message',
   props: {
@@ -26,9 +24,11 @@ export default {
       default: () => ({}),
     },
   },
-  computed: mapState({
-    username: 'username',
-  }),
+  computed: {
+    username() {
+      return this.$store.getters.jwtData.data.username;
+    },
+  },
 };
 </script>
 

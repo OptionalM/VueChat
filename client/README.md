@@ -6,11 +6,13 @@ It also uses [Vue-Socket.io](https://github.com/MetinSeylan/Vue-Socket.io).
 
 ### Project setup
 ```bash
+# Create a .env like the .env.example and fill it with your information.
+
 # Install dependencies
 yarn install
 
 # Run a dev server with hot-reload
-vue serve
+yarn serve
 
 # Build to let it be served by the server
 yarn run build

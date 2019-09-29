@@ -36,18 +36,18 @@ export default {
     msg: (data) => {
       store.commit('addMsg', data);
     },
-    redirect: (data) => {
-      if (data === 'No username set.') {
-        store.commit('setUsername', undefined);
+    system(data) {
+      if (data.status === 402) {
+        store.commit('setJWT', '');
         this.$router.push('/login');
       }
     },
   },
   methods: {
     sendMsg() {
-      const body = document.getElementsByName('Textbox')[0].value;
-      if (body.length > 1) {
-        this.$socket.emit('msg', body);
+      const text = document.getElementsByName('Textbox')[0].value;
+      if (text.length > 1) {
+        this.$socket.emit('msg', text);
       }
       document.getElementsByName('Textbox')[0].value = '';
     },

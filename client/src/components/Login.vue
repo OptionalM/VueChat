@@ -1,6 +1,6 @@
 <template>
-  <div class="select-username">
-    <h1>{{ roomName }}</h1>
+  <div class="login">
+    <h1>Login</h1>
     <div class="input-box">
       <input
         id="Textbox"
@@ -8,11 +8,16 @@
         name="Textbox"
         placeholder="Type Username Here..."
         autofocus
-        @keyup.enter="setUsername"
+        @keyup.enter="login"
       >
-      <button @click="setUsername">
+      <button @click="login">
         Commit
       </button>
+      <br v-if="userError">
+      <br v-if="userError">
+      <span v-if="userError">
+        Wrong Username or Password.
+      </span>
     </div>
   </div>
 </template>
@@ -21,31 +26,33 @@
 import store from '../store/index';
 
 export default {
-  name: 'Chat',
-  props: {
-    roomName: {
-      type: String,
-      default: 'Chatroom #1',
-    },
+  name: 'Login',
+  data() {
+    return { userError: false };
   },
   sockets: {
-    msg: (data) => {
-      store.commit('addMsg', data);
-    },
-    redirect(data) {
+    system(data) {
       if (data.status === 200) {
-        store.commit('setUsername', data.payload);
-        this.$router.push('/');
+        this.$router.push('/')
+          .catch((e) => { console.log(e); });
+      } else {
+        this.showError();
       }
     },
   },
   methods: {
-    setUsername() {
-      const name = document.getElementsByName('Textbox')[0].value;
-      if (name.length > 1) {
-        this.$socket.emit('name', name);
+    login() {
+      const username = document.getElementsByName('Textbox')[0].value;
+      if (username.length > 1) {
+        store.dispatch('fetchJWT', { username, password: '' })
+          .then(() => this.$socket.emit('auth', store.getters.jwt))
+          .catch(() => this.showError());
       }
       document.getElementsByName('Textbox')[0].value = '';
+    },
+    showError() {
+      this.userError = true;
+      setTimeout(() => { this.userError = false; }, 3000);
     },
   },
 };
@@ -56,7 +63,7 @@ export default {
 h1 {
   padding: 5px;
 }
-.select-username {
+.login {
   flex: 1 1 auto;
   display: flex;
   flex-flow: column;
@@ -106,5 +113,8 @@ button:hover {
 }
 button:active {
   background-color: #666;
+}
+span {
+  color: #ff0000;
 }
 </style>

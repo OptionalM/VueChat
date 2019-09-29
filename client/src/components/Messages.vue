@@ -3,7 +3,7 @@
     <div v-if="msgs.length">
       <div
         v-for="msg in msgs"
-        :key="msg.id"
+        :key="msg._id"
       >
         <Message :msg="msg" />
       </div>

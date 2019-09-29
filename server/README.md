@@ -9,6 +9,8 @@ Using [Socket.io](https://socket.io/) it serves the chat functionality.
 
 ### Project setup
 ```bash
+# Create a .env like the .env.example and fill it with your information.
+
 # Install dependencies
 yarn install
 
