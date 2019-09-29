@@ -13,10 +13,10 @@
       <button @click="login">
         Commit
       </button>
-      <br v-if="userError">
-      <br v-if="userError">
-      <span v-if="userError">
-        Wrong Username or Password.
+      <br v-if="showError">
+      <br v-if="showError">
+      <span v-if="showError">
+        {{ errorMsg }}
       </span>
     </div>
   </div>
@@ -28,7 +28,10 @@ import store from '../store/index';
 export default {
   name: 'Login',
   data() {
-    return { userError: false };
+    return {
+      showError: false,
+      errorMsg: 'Wrong Username or Password.',
+    };
   },
   sockets: {
     system(data) {
@@ -40,19 +43,25 @@ export default {
       }
     },
   },
+  mounted() {
+    if (this.$route.params.msg !== undefined) {
+      this.displayError(5000, this.$route.params.msg);
+    }
+  },
   methods: {
     login() {
       const username = document.getElementsByName('Textbox')[0].value;
       if (username.length > 1) {
         store.dispatch('fetchJWT', { username, password: '' })
           .then(() => this.$socket.emit('auth', store.getters.jwt))
-          .catch(() => this.showError());
+          .catch(() => this.displayError(3000));
       }
       document.getElementsByName('Textbox')[0].value = '';
     },
-    showError() {
-      this.userError = true;
-      setTimeout(() => { this.userError = false; }, 3000);
+    displayError(timer, msg = 'Wrong Username or Password.') {
+      this.showError = true;
+      this.errorMsg = msg;
+      setTimeout(() => { this.showError = false; }, timer);
     },
   },
 };

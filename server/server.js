@@ -78,7 +78,6 @@ io.on('connection', (socket) => {
   socket.on('auth', (payload) => {
     jwtV(payload, process.env.JWT_SECRET)
       .then((token) => {
-        console.log(token);
         socket.username = token.data.username;
         socket.emit('system', { status: 200, msg: 'Verified token.' });
       })
@@ -91,7 +90,8 @@ io.on('connection', (socket) => {
       const newMsg = new Message({ text, name: socket.username });
       newMsg.save()
         .then((m) => {
-          io.emit('msg', m);
+          // eslint-disable-next-line no-underscore-dangle
+          io.emit('msg', { id: m._id, text: m.text, name: m.name });
         })
         .catch((e) => { console.log(e); });
     }

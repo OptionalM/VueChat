@@ -39,7 +39,8 @@ export default {
     system(data) {
       if (data.status === 402) {
         store.commit('setJWT', '');
-        this.$router.push('/login');
+        this.$router.push({ name: 'Login', params: { msg: 'You were logged out.' } })
+          .catch((e) => { console.log(e); });
       }
     },
   },
