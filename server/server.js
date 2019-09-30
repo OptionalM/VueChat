@@ -15,6 +15,7 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 // Mongoose models
 const { Message } = require('./models/Message');
+const { User } = require('./models/User');
 
 // promisify jwt.verify
 const jwtV = Promise.promisify(jwt.verify, jwt);
@@ -54,15 +55,66 @@ app.get('/msgs.json', (req, res) => {
     .then((msgs) => { res.send(msgs); });
 });
 
-// generate token
-app.post('/auth', (req, res) => {
-  // TODO: check db
-  const token = jwt.sign({
-    exp: Math.floor(Date.now() / 1000) + (20), // valid for 20 seconds
-    data: req.body,
-  },
-  process.env.JWT_SECRET);
-  res.send(token);
+// create account
+app.post('/register', (req, res) => {
+  if (
+    req.body.username !== undefined
+    && req.body.password !== undefined
+    && req.body.username.length > 0
+    && req.body.username.length < 16
+    && req.body.password.length > 0 // security risk
+    && req.body.password.length < 30
+  ) {
+    User.findOne({ username: { $regex: req.body.username, $options: 'i' } })
+      .then(() => res.send.status(409).send('User already exists.'))
+      .catch(() => {
+        const newUser = new User({ username: req.body.username, password: req.body.password });
+        newUser.save()
+          .then(() => {
+            res.send('Account created');
+          })
+          .catch((e) => {
+            console.log(e);
+            res.status(500).send('DB Error');
+          });
+      });
+  } else {
+    res.status(400).send('Incorrect lengths for Username or Password');
+  }
+});
+
+// verify account and get token
+app.post('/login', (req, res) => {
+  if (
+    req.body.username !== undefined
+    && req.body.password !== undefined
+    && req.body.username.length > 0
+    && req.body.username.length < 16
+    && req.body.password.length > 0 // security risk
+    && req.body.password.length < 30
+  ) {
+    let user;
+    User.findOne({ username: { $regex: req.body.username, $options: 'i' } })
+      .then((u) => {
+        user = u;
+        return u.checkPassword(req.body.password);
+      })
+      .then((r) => {
+        if (r) {
+          const token = jwt.sign({
+            exp: Math.floor(Date.now() / 1000) + (20), // valid for 20 seconds
+            data: { username: user.username },
+          },
+          process.env.JWT_SECRET);
+          res.send(token);
+        } else {
+          res.status(402).send('Incorrect Username or Password');
+        }
+      })
+      .catch((e) => { console.log(e); res.status(402).send('Incorrect Username or Password'); });
+  } else {
+    res.status(400).send('Incorrect lengths for Username or Password');
+  }
 });
 
 // Catch all other routes and return the index file

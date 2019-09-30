@@ -19,8 +19,7 @@ export default {
   },
   actions: {
     fetchJWT({ commit }, { username, password }) {
-      console.log(process.env.API_PORT);
-      return axios.post(`http://localhost:${process.env.VUE_APP_API_PORT}/auth`, { username, password })
+      return axios.post(`http://localhost:${process.env.VUE_APP_API_PORT}/login`, { username, password })
         .then((res) => {
           commit('setJWT', res.data);
         });

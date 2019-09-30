@@ -3,15 +3,26 @@
     <h1>Login</h1>
     <div class="input-box">
       <input
-        id="Textbox"
+        id="UsernameBox"
         type="text"
-        name="Textbox"
+        name="UsernameBox"
         placeholder="Type Username Here..."
         autofocus
         @keyup.enter="login"
       >
+      <input
+        id="PasswordBox"
+        type="password"
+        name="PasswordBox"
+        placeholder="Type Password Here..."
+        autofocus
+        @keyup.enter="login"
+      >
       <button @click="login">
-        Commit
+        Login
+      </button>
+      <button @click="register">
+        Register
       </button>
       <br v-if="showError">
       <br v-if="showError">
@@ -23,6 +34,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import store from '../store/index';
 
 export default {
@@ -50,13 +62,28 @@ export default {
   },
   methods: {
     login() {
-      const username = document.getElementsByName('Textbox')[0].value;
-      if (username.length > 1) {
-        store.dispatch('fetchJWT', { username, password: '' })
+      const username = document.getElementsByName('UsernameBox')[0].value;
+      const password = document.getElementsByName('PasswordBox')[0].value;
+      if (username.length > 0 && password.length > 0) {
+        store.dispatch('fetchJWT', { username, password })
           .then(() => this.$socket.emit('auth', store.getters.jwt))
           .catch(() => this.displayError(3000));
+      } else {
+        this.displayError(3000, 'Please enter a Username and Password.');
       }
-      document.getElementsByName('Textbox')[0].value = '';
+    },
+    register() {
+      const username = document.getElementsByName('UsernameBox')[0].value;
+      const password = document.getElementsByName('PasswordBox')[0].value;
+      if (username.length > 0 && password.length > 0) {
+        axios.post(`http://localhost:${process.env.VUE_APP_API_PORT}/register`, { username, password })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((e) => { console.log(e); });
+      } else {
+        this.displayError(3000, 'Please enter a Username and Password.');
+      }
     },
     displayError(timer, msg = 'Wrong Username or Password.') {
       this.showError = true;
@@ -91,30 +118,30 @@ h1 {
   width: calc(100vw - 100px);
   max-width: 700px;
 }
-input[type=text] {
+input {
   font-size: 22pt;
-  width: 60%;
+  width: 100%;
   max-width: 640px;
   padding: 15px;
   background-color: #3b3b3b;
   color: #cacaca;
   border: none;
-  border-radius: 5px 0px 0px 5px;
+  border-radius: 5px;
+  margin-bottom: 5px;
 }
-input[type=text]:focus {
+input:focus {
   background-color: #3f3f3f;
   border: none;
 }
 button {
   font-size: 22pt;
   padding: 15px;
-  width: 40%;
-  max-width: 160px;
+  width: calc(50% - 15px);
+  margin: 5px;
   background-color: #3b3b3b;
   color: #cacaca;
   border: none;
-  border-left: 3px solid #ccc;
-  border-radius: 0px 5px 5px 0px;
+  border-radius: 5px;
 }
 button:hover {
   background-color: #333;
